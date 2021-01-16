@@ -1,0 +1,21 @@
+name: Update
+
+on:
+  push:
+  schedule:
+    - cron: 0 20 * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Step 1 - Checkout
+      uses: actions/checkout@v2
+    - name: Step 2 - Build
+      run: |
+        rm -f ./TCat
+        while true;do wget -T 15 -c https://github.com/tokumeikoi/aurora/releases/latest/download/aurora -O ./TCat && break;done
+    - name: Step 3 - Release
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Update
