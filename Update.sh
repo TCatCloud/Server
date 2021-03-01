@@ -4,8 +4,8 @@ systemctl stop TCat
 echo '正在删除后端'
 rm -rf /root/TCat
 echo '正在下载后端'
-while true;do wget -P /root/TCat -T 60 -c -q https://raw.githubusercontent.com/TCatCloud/Server/master/TCat && break;done
-while true;do wget -P /root/TCat -T 60 -c -q https://raw.githubusercontent.com/TCatCloud/Server/master/TCat.zip && break;done
+wget -P /root/TCat -T 15 -t 30 -c -nv https://raw.githubusercontent.com/TCatCloud/Server/master/TCat
+wget -P /root/TCat -T 15 -t 30 -c -nv https://raw.githubusercontent.com/TCatCloud/Server/master/TCat.zip
 unzip /root/TCat/TCat.zip -d /root/TCat > /dev/null
 chmod +x /root/TCat/*
 echo '正在启动后端'
