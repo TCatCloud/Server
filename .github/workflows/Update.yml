@@ -1,0 +1,41 @@
+name: Update
+
+on:
+  push:
+  schedule:
+    - cron: 0 20 * * *
+
+jobs:
+  Update:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Step 1 - Checkout
+      uses: actions/checkout@v3
+    - name: Step 2 - Build
+      run: |
+        rm -f ./Soga
+        wget -q --show-progress https://github.com/vaxilu/soga/releases/latest/download/soga-linux-amd64.tar.gz
+        tar zxvf ./soga-linux-amd64.tar.gz
+        rm -f ./soga-linux-amd64.tar.gz
+        mv ./soga ./tmp
+        mv ./tmp/soga ./Soga
+        rm -rf ./tmp
+        rm -f XRayR
+        wget -q --show-progress https://github.com/XrayR-project/XrayR/releases/latest/download/XrayR-linux-64.zip
+        unzip -o XrayR-linux-64.zip XrayR
+        rm -f XrayR-linux-64.zip
+        mv XrayR XRayR
+        rm -f ./AliDDNS
+        AliDDNS=$(wget -qO- https://api.github.com/repos/OpenIoTHub/aliddns/releases | grep -o '"tag_name": ".*"' | head -n 1 | sed 's/"//g' | sed 's/tag_name: //g' | sed 's/v//g')
+        wget https://github.com/OpenIoTHub/aliddns/releases/download/v${AliDDNS}/aliddns_${AliDDNS}_Linux_x86_64.tar.gz -O ./AliDDNS.tar.gz
+        tar zxvf ./AliDDNS.tar.gz
+        rm -f ./AliDDNS.tar.gz ./LICENSE ./README.md
+        mv ./aliddns ./AliDDNS
+        git config --global user.email "tcatmoexin@gmail.com"
+        git config --global user.name TCatCloud
+        git checkout --orphan latest-master
+        git add -A
+        git commit -am "Update"
+        git branch -D master
+        git branch -m master
+        git push -f origin master
